@@ -59,7 +59,8 @@ const typeDefs = gql`
   type Query {
     getApiVersion: String
     getPatients: [PatientType]
-    detCitas: [CitaType]
+    getCitas: [CitaType]
+    getUser: DentistType
   }
 
   type conceptosType {
@@ -70,7 +71,7 @@ const typeDefs = gql`
 
   type CitaType {
     id: ID
-    Patient: ID
+    Patient: PatientType
     DateArranged: String
     cost: Float
     conceptos: [conceptosType]
@@ -82,7 +83,7 @@ const typeDefs = gql`
   }
 
   input conceptosInput {
-    tipoTratamiento: tipoTratamientoEnum!
+    tipoTratamiento: String!
     piezas: [String]!
   }
 
@@ -99,6 +100,7 @@ const typeDefs = gql`
     createNewPatient(input: PatientInput!): PatientType
     createNewCita(input: CitaInput!): CitaType
     payAccountPatient(input: Float): PatientType
+    changeStatusPatient(idPatient: ID!): String
   }
 `;
 

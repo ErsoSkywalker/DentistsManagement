@@ -13,7 +13,19 @@ const resolvers = {
   Query: {
     getApiVersion: () => "1.0.0",
     getPatients: async (_, {}, ctx) => {
-      return await Patient.find({ Dentist: ctx.user.id });
+      return await Patient.find({ Dentist: ctx.user.id, estado: "Activo" });
+    },
+    getCitas: async (_, {}, ctx) => {
+      const salida = await Cita.find({ Dentist: ctx.user.id }).populate(
+        "Patient"
+      );
+      console.log(salida);
+
+      return salida;
+    },
+    getUser: async (_, {}, ctx) => {
+      const dentist = await Dentist.findOne({ _id: ctx.user.id });
+      return dentist;
     },
   },
   Mutation: {
@@ -90,6 +102,16 @@ const resolvers = {
       return newCita;
     },
     payAccountPatient: async (_, { input }, ctx) => {},
+    changeStatusPatient: async (_, { idPatient }, ctx) => {
+      await Patient.findOneAndUpdate(
+        {
+          _id: idPatient,
+        },
+        { estado: "Inactivo" },
+        { new: true }
+      );
+      return "Estado cambiado con éxito";
+    },
   },
 };
 
